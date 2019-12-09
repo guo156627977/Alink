@@ -1,9 +1,13 @@
-
 <font size=7>[English](README.en-US.md)| 简体中文</font>
 
 # Alink
 
- Alink是基于Flink的通用算法平台,由阿里巴巴计算平台PAI团队研发。
+ Alink是基于Flink的通用算法平台,由阿里巴巴计算平台PAI团队研发,欢迎大家加入Alink开源用户钉钉群进行交流。
+ 
+ 
+<div align=center>
+<img src="https://img.alicdn.com/tfs/TB1qeWTpAT2gK0jSZPcXXcKkpXa-884-1176.jpg" height="20%" width="20%">
+</div>
 
 #### 开源算法列表
 
@@ -24,10 +28,10 @@
 
 1. 确保使用环境中有Python3，版本>=3.5。
 2. 根据 Python 版本下载对应的 pyalink 包：
-    - Python 3.5：[链接1](https://alink-release.oss-cn-beijing.aliyuncs.com/v1.0/pyalink-1.0_flink_1.9.0_scala_2.11-py3.5.egg) [链接2](https://github.com/alibaba/Alink/releases/download/v1.0/pyalink-1.0_flink_1.9.0_scala_2.11-py3.5.egg) (MD5: 5831da92fc1c163ce20493a3456b0bac)
-    - Python 3.6：[链接1](https://alink-release.oss-cn-beijing.aliyuncs.com/v1.0/pyalink-1.0_flink_1.9.0_scala_2.11-py3.6.egg) [链接2](https://github.com/alibaba/Alink/releases/download/v1.0/pyalink-1.0_flink_1.9.0_scala_2.11-py3.6.egg) (MD5: 3f5c7601527a5197f58648572391ab12)
-    - Python 3.7：[链接1](https://alink-release.oss-cn-beijing.aliyuncs.com/v1.0/pyalink-1.0_flink_1.9.0_scala_2.11-py3.7.egg) [链接2](https://github.com/alibaba/Alink/releases/download/v1.0/pyalink-1.0_flink_1.9.0_scala_2.11-py3.7.egg) (MD5: d5979873296fbd8ad83d562120693032)
-    - Python 3.8：[链接1](https://alink-release.oss-cn-beijing.aliyuncs.com/v1.0/pyalink-1.0_flink_1.9.0_scala_2.11-py3.8.egg) [链接2](https://github.com/alibaba/Alink/releases/download/v1.0/pyalink-1.0_flink_1.9.0_scala_2.11-py3.8.egg) (MD5: c49e2c9db4ab72023f5d56dbb655b38b)
+    - Python 3.5：[链接1](https://alink-release.oss-cn-beijing.aliyuncs.com/v1.0.1/pyalink-1.0.1_flink_1.9.0_scala_2.11-py3.5.egg) [链接2](https://github.com/alibaba/Alink/releases/download/v1.0.1/pyalink-1.0.1_flink_1.9.0_scala_2.11-py3.5.egg) (MD5: 9714e5e02b4681a55263970abc6dbe57)
+    - Python 3.6：[链接1](https://alink-release.oss-cn-beijing.aliyuncs.com/v1.0.1/pyalink-1.0.1_flink_1.9.0_scala_2.11-py3.6.egg) [链接2](https://github.com/alibaba/Alink/releases/download/v1.0.1/pyalink-1.0.1_flink_1.9.0_scala_2.11-py3.6.egg) (MD5: 112638a81c05f1372f9dac880ec527e6)
+    - Python 3.7：[链接1](https://alink-release.oss-cn-beijing.aliyuncs.com/v1.0.1/pyalink-1.0.1_flink_1.9.0_scala_2.11-py3.7.egg) [链接2](https://github.com/alibaba/Alink/releases/download/v1.0.1/pyalink-1.0.1_flink_1.9.0_scala_2.11-py3.7.egg) (MD5: 9b483da5176977e4f330ca7675120fed)
+    - Python 3.8：[链接1](https://alink-release.oss-cn-beijing.aliyuncs.com/v1.0.1/pyalink-1.0.1_flink_1.9.0_scala_2.11-py3.8.egg) [链接2](https://github.com/alibaba/Alink/releases/download/v1.0.1/pyalink-1.0.1_flink_1.9.0_scala_2.11-py3.8.egg) (MD5: d04aa5d367bc653d5e872e1eba3494cd)
 3. 使用 ```easy_install``` 进行安装 ```easy_install [存放的路径]/pyalink-0.0.1-py3.*.egg```。需要注意的是：
     * 如果之前安装过 pyalink，请先使用 ```pip uninstall pyalink``` 卸载之前的版本。
     * 如果有多个版本的 Python，可能需要使用特定版本的 ```easy_install```，比如 ```easy_install-3.7```。
@@ -97,3 +101,26 @@ Q：能否直接使用 Python 脚本而不是 Notebook 运行？
 A：可以。但需要在代码最后调用 resetEnv()，否则脚本不会退出。
 
 -----
+
+如何在集群上运行Alink算法
+--------
+
+1. 准备Flink集群
+```
+  wget https://archive.apache.org/dist/flink/flink-1.9.0/flink-1.9.0-bin-scala_2.11.tgz
+  tar -xf flink-1.9.0-bin-scala_2.11.tgz && cd flink-1.9.0
+  ./bin/start-cluster.sh
+```
+
+2. 准备Alink算法包
+```
+  git clone https://github.com/alibaba/Alink.git
+  cd Alink && mvn -Dmaven.test.skip=true clean package shade:shade
+```
+
+3. 运行Java示例
+```
+  ./bin/flink run -p 1 -c com.alibaba.alink.ALSExample [path_to_Alink]/examples/target/alink_examples-0.1-SNAPSHOT.jar
+  # ./bin/flink run -p 2 -c com.alibaba.alink.GBDTExample [path_to_Alink]/examples/target/alink_examples-0.1-SNAPSHOT.jar
+  # ./bin/flink run -p 2 -c com.alibaba.alink.KMeansExample [path_to_Alink]/examples/target/alink_examples-0.1-SNAPSHOT.jar
+```
